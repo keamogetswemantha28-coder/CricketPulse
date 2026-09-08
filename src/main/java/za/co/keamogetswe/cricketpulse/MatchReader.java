@@ -33,7 +33,30 @@ public class MatchReader {
                 }
                 System.out.println();
             });
+            JsonNode innings = jsonNode.get("innings");
+            for (JsonNode inning: innings){
+                System.out.println();
+                System.out.println("===Innings " + inning.get("team").asText() + "===");
 
+                JsonNode overs = inning.get("overs");
+                for (JsonNode over: overs){
+                    System.out.println();
+                    System.out.println("===Over " + over.get("over").asInt() + "===");
+
+                    JsonNode deliveries = over.get("deliveries");
+                    for (JsonNode delivery: deliveries){
+                        System.out.println("Actual Delivery: "+ delivery.get("actual_delivery").asText());
+                        System.out.println("Batter: " + delivery.get("batter").asText());
+                        System.out.println("Bowler: " + delivery.get("bowler").asText());
+                        System.out.println("Non_Striker: "+ delivery.get("non_striker").asText());
+                        System.out.println("Batter runs: " + delivery.get("runs").get("batter").asInt());
+                        System.out.println("Extras: " + delivery.get("runs").get("extras").asInt());
+                        System.out.println("Total runs: " + delivery.get("runs").get("total").asInt());
+                        System.out.println();
+                    }
+                }
+
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

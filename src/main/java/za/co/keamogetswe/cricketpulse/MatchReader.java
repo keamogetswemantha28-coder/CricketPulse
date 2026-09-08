@@ -18,10 +18,22 @@ public class MatchReader {
             }
             JsonNode jsonNode = objectMapper.readTree(inputStream);
             System.out.println("====Match Statistic===");
-            System.out.println("City: "+ jsonNode.get("info").get("city"));
-            System.out.println("Date: "+ jsonNode.get("info").get("dates"));
-            System.out.println("Match type: "+ jsonNode.get("info").get("match_type"));
-            System.out.println("Results: "+ jsonNode.get("info").get("outcome").get("result"));
+            System.out.println("City: "+ jsonNode.get("info").get("city").asText());
+            System.out.println("Date: "+ jsonNode.get("info").get("dates").get(0).asText());
+            System.out.println("Match type: "+ jsonNode.get("info").get("match_type").asText());
+            System.out.println("Result: "+ jsonNode.get("info").get("outcome").get("result").asText());
+            System.out.println();
+            System.out.println("===Teams===");
+            JsonNode players = jsonNode.get("info").get("players");
+            players.fields().forEachRemaining(team  ->{
+                System.out.println(team.getKey());
+                System.out.println("===Members===");
+                for (JsonNode player : team.getValue()){
+                    System.out.println(player.asText());
+                }
+                System.out.println();
+            });
+
         } catch (IOException e) {
             e.printStackTrace();
         }

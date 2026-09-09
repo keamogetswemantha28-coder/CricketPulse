@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class MatchReader {
     public static void main(String[] args) {
@@ -33,6 +34,9 @@ public class MatchReader {
                 }
                 System.out.println();
             });
+            //A list to add the deliveries
+            ArrayList<Delivery> deliveryList = new ArrayList<>();
+
             JsonNode innings = jsonNode.get("innings");
             for (JsonNode inning: innings){
                 System.out.println();
@@ -43,20 +47,28 @@ public class MatchReader {
                     System.out.println();
                     System.out.println("===Over " + over.get("over").asInt() + "===");
 
+
                     JsonNode deliveries = over.get("deliveries");
-                    for (JsonNode delivery: deliveries){
-                        System.out.println("Actual Delivery: "+ delivery.get("actual_delivery").asText());
-                        System.out.println("Batter: " + delivery.get("batter").asText());
-                        System.out.println("Bowler: " + delivery.get("bowler").asText());
-                        System.out.println("Non_Striker: "+ delivery.get("non_striker").asText());
-                        System.out.println("Batter runs: " + delivery.get("runs").get("batter").asInt());
-                        System.out.println("Extras: " + delivery.get("runs").get("extras").asInt());
-                        System.out.println("Total runs: " + delivery.get("runs").get("total").asInt());
-                        System.out.println();
+
+
+                    for (JsonNode deliveryNode : deliveries){
+                        Delivery delivery = new Delivery(
+                                deliveryNode.get("actual_delivery").asText(),
+                                deliveryNode.get("batter").asText(),
+                                deliveryNode.get("bowler").asText(),
+                                deliveryNode.get("non_striker").asText(),
+                                deliveryNode.get("runs").get("batter").asInt(),
+                                deliveryNode.get("runs").get("extras").asInt(),
+                                deliveryNode.get("runs").get("total").asInt()
+                        );
+                        deliveryList.add(delivery);
                     }
                 }
-
             }
+            System.out.println("===Delivery Statistics===");
+            System.out.println("Total deliveries: " + deliveryList.size());
+            System.out.println("First Delivery Batter: " + deliveryList.get(0).getBatter());
+            System.out.println("First Delivery Runs: " + deliveryList.get(0).getBatterRuns());
         } catch (IOException e) {
             e.printStackTrace();
         }

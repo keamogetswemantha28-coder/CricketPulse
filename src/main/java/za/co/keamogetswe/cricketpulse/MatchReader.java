@@ -91,7 +91,7 @@ public class MatchReader {
             //Call the methods
             matchReader.readMatchInfo(jsonNode);
             matchReader.readPlayers(jsonNode);
-            matchReader.readDeliveries(jsonNode);
+            List<Delivery> deliveryList = matchReader.readDeliveries(jsonNode);
 
         } catch (IOException e) {
             e.printStackTrace();

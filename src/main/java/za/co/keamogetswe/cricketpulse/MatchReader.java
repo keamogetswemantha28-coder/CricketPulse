@@ -36,6 +36,24 @@ public class MatchReader {
             System.out.println();
         }
 
+    public void readPlayers(JsonNode jsonNode){
+        System.out.println("===Teams===");
+
+        JsonNode players = jsonNode.get("info").get("players");
+
+        players.fields().forEachRemaining(team  ->{
+            System.out.println(team.getKey());
+            System.out.println("===Members===");
+
+            for (JsonNode player : team.getValue()){
+                System.out.println(player.asText());
+            }
+            System.out.println();
+        });
+
+
+    }
+
 }
 
 

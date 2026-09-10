@@ -10,21 +10,6 @@ import java.util.List;
 
 public class MatchReader {
 
-    public static void main(String[] args) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try (InputStream inputStream = MatchReader.class.getClassLoader().
-                getResourceAsStream("data/sample/Match.json")) {
-
-            if (inputStream == null) {
-                throw new IOException("File not found");
-            }
-            JsonNode jsonNode = objectMapper.readTree(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     //Read match information
     public void readMatchInfo(JsonNode jsonNode){
 
@@ -90,6 +75,28 @@ public class MatchReader {
         return deliveryList;
     }
 
+
+    public static void main(String[] args) {
+        MatchReader matchReader = new MatchReader();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try (InputStream inputStream = MatchReader.class.getClassLoader().
+                getResourceAsStream("data/sample/Match.json")) {
+
+            if (inputStream == null) {
+                throw new IOException("File not found");
+            }
+            JsonNode jsonNode = objectMapper.readTree(inputStream);
+
+            //Call the methods
+            matchReader.readMatchInfo(jsonNode);
+            matchReader.readPlayers(jsonNode);
+            matchReader.readDeliveries(jsonNode);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

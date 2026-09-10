@@ -75,6 +75,14 @@ public class MatchReader {
         return deliveryList;
     }
 
+    public int calculateTotalRuns(List<Delivery> deliveryList){
+        int totalRuns = 0;
+        for (Delivery delivery: deliveryList){
+            totalRuns += delivery.getTotalRuns();
+        }
+        return totalRuns;
+    }
+
 
     public static void main(String[] args) {
         MatchReader matchReader = new MatchReader();
@@ -92,6 +100,7 @@ public class MatchReader {
             matchReader.readMatchInfo(jsonNode);
             matchReader.readPlayers(jsonNode);
             List<Delivery> deliveryList = matchReader.readDeliveries(jsonNode);
+            int totalDeliveryRuns = matchReader.calculateTotalRuns(deliveryList);
 
         } catch (IOException e) {
             e.printStackTrace();

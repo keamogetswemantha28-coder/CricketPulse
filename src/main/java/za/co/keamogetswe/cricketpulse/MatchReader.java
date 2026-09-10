@@ -54,6 +54,42 @@ public class MatchReader {
 
     }
 
+    public List<Delivery> readDeliveries(JsonNode jsonNode){
+
+        //A list to add the deliveries
+        ArrayList<Delivery> deliveryList = new ArrayList<>();
+
+        JsonNode innings = jsonNode.get("innings");
+        for (JsonNode inning: innings) {
+            System.out.println();
+            System.out.println("===Innings " + inning.get("team").asText() + "===");
+
+            JsonNode overs = inning.get("overs");
+            for (JsonNode over : overs) {
+                System.out.println();
+                System.out.println("===Over " + over.get("over").asInt() + "===");
+
+
+                JsonNode deliveries = over.get("deliveries");
+
+
+                for (JsonNode deliveryNode : deliveries) {
+                    Delivery delivery = new Delivery(
+                            deliveryNode.get("actual_delivery").asText(),
+                            deliveryNode.get("batter").asText(),
+                            deliveryNode.get("bowler").asText(),
+                            deliveryNode.get("non_striker").asText(),
+                            deliveryNode.get("runs").get("batter").asInt(),
+                            deliveryNode.get("runs").get("extras").asInt(),
+                            deliveryNode.get("runs").get("total").asInt()
+                    );
+                    deliveryList.add(delivery);
+                }
+            }
+        }
+        return deliveryList;
+    }
+
 }
 
 

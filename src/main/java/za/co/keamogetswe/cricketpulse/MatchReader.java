@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MatchReader {
@@ -81,6 +82,26 @@ public class MatchReader {
             totalRuns += delivery.getTotalRuns();
         }
         return totalRuns;
+    }
+
+    public HashMap<String, Integer> calculateRunsByABatter(List<Delivery> deliveryList){
+        HashMap<String, Integer> totalBatterRun = new HashMap<>();
+        int batterRuns = 0;
+
+        for (Delivery delivery: deliveryList){
+            String name = delivery.getBatter();
+
+            if (totalBatterRun.containsKey(name)){
+                batterRuns = totalBatterRun.get(name);
+                batterRuns+= delivery.getBatterRuns();
+
+            }else {
+                batterRuns =delivery.getBatterRuns();
+            }
+
+            totalBatterRun.put(name, batterRuns);
+        }
+        return totalBatterRun;
     }
 
 

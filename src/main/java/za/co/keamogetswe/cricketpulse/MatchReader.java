@@ -122,6 +122,7 @@ public class MatchReader {
             matchReader.readPlayers(jsonNode);
             List<Delivery> deliveryList = matchReader.readDeliveries(jsonNode);
             int totalDeliveryRuns = matchReader.calculateTotalRuns(deliveryList);
+            matchReader.calculateRunsByABatter(deliveryList);
 
         } catch (IOException e) {
             e.printStackTrace();

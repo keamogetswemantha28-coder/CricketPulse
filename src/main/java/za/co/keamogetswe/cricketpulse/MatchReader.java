@@ -47,12 +47,12 @@ public class MatchReader {
 
         JsonNode innings = jsonNode.get("innings");
         for (JsonNode inning: innings) {
-            System.out.println();
+            //System.out.println();
             System.out.println("===Innings " + inning.get("team").asText() + "===");
 
             JsonNode overs = inning.get("overs");
             for (JsonNode over : overs) {
-                System.out.println();
+                //System.out.println();
                 System.out.println("===Over " + over.get("over").asInt() + "===");
 
 
@@ -104,6 +104,24 @@ public class MatchReader {
         return totalBatterRun;
     }
 
+    public HashMap<String, Integer> calculateRunsByBowler(List<Delivery> deliveryList){
+        HashMap<String, Integer> totalRunsConcededByBowler = new HashMap<>();
+        int runConceded = 0;
+
+        for (Delivery delivery: deliveryList){
+            String name = delivery.getBowler();
+
+            if (totalRunsConcededByBowler.containsKey(name)){
+                runConceded = totalRunsConcededByBowler.get(name);
+                runConceded += delivery.getTotalRuns();
+            }else {
+                runConceded = delivery.getTotalRuns();
+            }
+            totalRunsConcededByBowler.put(name, runConceded);
+        }
+        return totalRunsConcededByBowler;
+    }
+
 
     public static void main(String[] args) {
         MatchReader matchReader = new MatchReader();
@@ -122,7 +140,11 @@ public class MatchReader {
             matchReader.readPlayers(jsonNode);
             List<Delivery> deliveryList = matchReader.readDeliveries(jsonNode);
             int totalDeliveryRuns = matchReader.calculateTotalRuns(deliveryList);
-            matchReader.calculateRunsByABatter(deliveryList);
+            System.out.println(totalDeliveryRuns);
+            HashMap<String, Integer> batterRuns = matchReader.calculateRunsByABatter(deliveryList);
+            System.out.println("Runs by batters" + "\n" +batterRuns);
+            HashMap<String, Integer> runsConceded = matchReader.calculateRunsByBowler(deliveryList);
+            System.out.println("Runs conceded by each bowler" + "\n" + runsConceded);
 
         } catch (IOException e) {
             e.printStackTrace();

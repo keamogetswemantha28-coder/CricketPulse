@@ -8,9 +8,11 @@ public class Delivery {
     private int batterRuns;
     private int extras;
     private int totalRuns;
+    private String playerOut;
+    private String wicketKind;
 
-    public Delivery(String actualDelivery, String batter, String bowler,
-                    String nonStriker, int batterRuns, int extras, int totalRuns) {
+    public Delivery(String actualDelivery, String batter, String bowler, String nonStriker,
+                    int batterRuns, int extras, int totalRuns, String playerOut, String wicketKind) {
         this.actualDelivery = actualDelivery;
         this.batter = batter;
         this.bowler = bowler;
@@ -18,6 +20,8 @@ public class Delivery {
         this.batterRuns = batterRuns;
         this.extras = extras;
         this.totalRuns = totalRuns;
+        this.playerOut = playerOut;
+        this.wicketKind = wicketKind;
     }
 
     public String getActualDelivery() {
@@ -46,5 +50,13 @@ public class Delivery {
 
     public int getTotalRuns() {
         return totalRuns;
+    }
+
+    public String getPlayerOut() {
+        return playerOut;
+    }
+
+    public String getWicketKind() {
+        return wicketKind;
     }
 }

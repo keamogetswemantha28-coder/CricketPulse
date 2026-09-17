@@ -60,6 +60,14 @@ public class MatchReader {
 
 
                 for (JsonNode deliveryNode : deliveries) {
+
+                    String playerOut = "";
+                    String wicketOut = "";
+
+                    if (deliveryNode.get("wickets") != null){
+                        playerOut = deliveryNode.get("wickets").get(0).get("player_out").asText();
+                        wicketOut = deliveryNode.get("wickets").get(0).get("kind").asText();
+                    }
                     Delivery delivery = new Delivery(
                             deliveryNode.get("actual_delivery").asText(),
                             deliveryNode.get("batter").asText(),
@@ -67,7 +75,9 @@ public class MatchReader {
                             deliveryNode.get("non_striker").asText(),
                             deliveryNode.get("runs").get("batter").asInt(),
                             deliveryNode.get("runs").get("extras").asInt(),
-                            deliveryNode.get("runs").get("total").asInt()
+                            deliveryNode.get("runs").get("total").asInt(),
+                            playerOut,
+                            wicketOut
                     );
                     deliveryList.add(delivery);
                 }
@@ -145,6 +155,13 @@ public class MatchReader {
             System.out.println("Runs by batters" + "\n" +batterRuns);
             HashMap<String, Integer> runsConceded = matchReader.calculateRunsByBowler(deliveryList);
             System.out.println("Runs conceded by each bowler" + "\n" + runsConceded);
+            for (Delivery delivery : deliveryList) {
+                if (!delivery.getPlayerOut().isEmpty()) {
+                    System.out.println();
+                    System.out.println("Player out: " + delivery.getPlayerOut());
+                    System.out.println("Wicket type: " + delivery.getWicketKind());
+                }
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

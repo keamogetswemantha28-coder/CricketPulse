@@ -132,6 +132,26 @@ public class MatchReader {
         return totalRunsConcededByBowler;
     }
 
+    public HashMap<String, Integer> calculateWicketsByBowler(List<Delivery> deliveryList){
+        HashMap<String, Integer> wicketsByBowler = new HashMap<>();
+        int numberOfWickets = 0;
+
+        for (Delivery delivery: deliveryList){
+            String name = delivery.getBowler();
+
+            if (!delivery.getWicketKind().equals("run out") && !delivery.getWicketKind().isEmpty()){
+                if (wicketsByBowler.containsKey(name)){
+                    numberOfWickets = wicketsByBowler.get(name);
+                    numberOfWickets += 1;
+                }else {
+                    numberOfWickets =1;
+                }
+                wicketsByBowler.put(name, numberOfWickets);
+            }
+        }
+        return wicketsByBowler;
+    }
+
 
     public static void main(String[] args) {
         MatchReader matchReader = new MatchReader();
@@ -162,6 +182,8 @@ public class MatchReader {
                     System.out.println("Wicket type: " + delivery.getWicketKind());
                 }
             }
+            HashMap<String, Integer> Wickets = matchReader.calculateWicketsByBowler(deliveryList);
+            System.out.println(Wickets);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -46,14 +46,16 @@ public class MatchReader {
         ArrayList<Delivery> deliveryList = new ArrayList<>();
 
         JsonNode innings = jsonNode.get("innings");
+        int inningsNumber = 0;
+
         for (JsonNode inning: innings) {
-            //System.out.println();
-            System.out.println("===Innings " + inning.get("team").asText() + "===");
+            inningsNumber++;
+            String battingTeamName = inning.get("team").asText();
 
             JsonNode overs = inning.get("overs");
             for (JsonNode over : overs) {
                 //System.out.println();
-                System.out.println("===Over " + over.get("over").asInt() + "===");
+                int overNumber = over.get("over").asInt();
 
 
                 JsonNode deliveries = over.get("deliveries");
@@ -63,10 +65,15 @@ public class MatchReader {
 
                     String playerOut = "";
                     String wicketOut = "";
+                    String extraType = null;
 
                     if (deliveryNode.get("wickets") != null){
                         playerOut = deliveryNode.get("wickets").get(0).get("player_out").asText();
                         wicketOut = deliveryNode.get("wickets").get(0).get("kind").asText();
+                    }
+
+                    if (deliveryNode.get("extras") != null){
+                        extraType = deliveryNode.get("extras").fieldNames().next();
                     }
                     Delivery delivery = new Delivery(
                             deliveryNode.get("actual_delivery").asText(),
@@ -77,7 +84,11 @@ public class MatchReader {
                             deliveryNode.get("runs").get("extras").asInt(),
                             deliveryNode.get("runs").get("total").asInt(),
                             playerOut,
-                            wicketOut
+                            wicketOut,
+                            battingTeamName,
+                            inningsNumber,
+                            overNumber,
+                            extraType
                     );
                     deliveryList.add(delivery);
                 }

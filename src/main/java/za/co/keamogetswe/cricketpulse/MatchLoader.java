@@ -1,9 +1,6 @@
 package za.co.keamogetswe.cricketpulse;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class MatchLoader {
 
@@ -25,5 +22,47 @@ public class MatchLoader {
             results.next();
             return results.getInt("team_id");
         }
+    }
+
+    public int getOrCreatePlayer(Connection connection, String playerName, int teamId) throws
+            SQLException{
+        String selectPlayer = "SELECT player_id FROM players WHERE name = ? AND team_id = ?";
+        try(PreparedStatement statement = connection.prepareStatement(selectPlayer)){
+            statement.setString(1, playerName);
+            statement.setInt(2, teamId);
+
+            ResultSet results = statement.executeQuery();
+
+            if (results.next()){
+                return results.getInt("player_id");
+            }
+        }
+        String insertPlayer = "INSERT INTO players(name, team_id) VALUES(?,?) RETURNING player_id";
+        try(PreparedStatement statement = connection.prepareStatement(insertPlayer)){
+            statement.setString(1, playerName);
+            statement.setInt(2, teamId);
+
+            ResultSet results = statement.executeQuery();
+            results.next();
+            return results.getInt("player_id");
+        }
+    }
+
+    public int insertMatch(Connection connection, int match_number, String match_type, String result, Date match_date,
+                            int team1_id, int team2_id) throws SQLException{
+        String insertMatch = "INSERT INTO matches(match_number, match_type, result, match_date, team1_id, team2_id) VALUES(?,?,?,?,?,?) RETURNING match_id";
+
+        try(PreparedStatement statement = connection.prepareStatement(insertMatch)){
+            statement.setInt(1, match_number);
+            statement.setString(2, match_type);
+            statement.setString(3, result);
+            statement.setDate(4, match_date);
+            statement.setInt(5, team1_id);
+            statement.setInt(6,team2_id);
+
+            ResultSet results = statement.executeQuery();
+            results.next();
+            return results.getInt("match_id");
+            }
     }
 }

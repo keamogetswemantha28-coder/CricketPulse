@@ -1,6 +1,11 @@
 package za.co.keamogetswe.cricketpulse;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class MatchLoader {
 
@@ -64,5 +69,33 @@ public class MatchLoader {
             results.next();
             return results.getInt("match_id");
             }
+    }
+
+    public Map<String, Integer> buildPlayerIdMap(Connection connection, JsonNode jsonNode,
+                                                 int team1Id, String team1Name,
+                                                 int team2Id, String team2Name) throws SQLException{
+        Map<String, Integer> playerIdByName = new HashMap<>();
+        JsonNode players = jsonNode.get("info").get("players");
+
+        Iterator<Map.Entry<String, JsonNode>> teamsIterator = players.fields();
+        while (teamsIterator.hasNext()){
+            Map.Entry<String, JsonNode> team = teamsIterator.next();
+
+            String teamName = team.getKey();
+            int teamId;
+
+            if (teamName.equals(team1Name)){
+                teamId = team1Id;
+            }else {
+                teamId = team2Id;
+            }
+
+            for (JsonNode playerNode: team.getValue()){
+                String playerName = playerNode.asText();
+                int playerId = getOrCreatePlayer(connection, playerName, teamId);
+                playerIdByName.put(playerName, playerId);
+            }
+        }
+        return  playerIdByName;
     }
 }

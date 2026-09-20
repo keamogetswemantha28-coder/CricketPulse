@@ -1,7 +1,10 @@
 package za.co.keamogetswe.cricketpulse;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -155,6 +158,48 @@ public class MatchLoader {
 
                 statement.executeUpdate();
             }
+        }
+    }
+
+    public void loadMatch(Connection connection, JsonNode jsonNode, MatchReader matchReader) throws SQLException{
+        String team1Name = jsonNode.get("info").get("teams").get(0).asText();
+        String team2Name = jsonNode.get("info").get("teams").get(1).asText();
+
+        int teamId1 = getOrCreateTeam(connection, team1Name);
+        int teamId2 = getOrCreateTeam(connection, team2Name);
+
+        Map<String, Integer> playerIdsByName = buildPlayerIdMap(connection, jsonNode, teamId1, team1Name, teamId2, team2Name);
+
+        // pull the 4 values insertMatch need from the JSON
+        int matchNumber = jsonNode.get("info").get("event").get("match_number").asInt();
+        String matchType = jsonNode.get("info").get("match_type").asText();
+        String result = jsonNode.get("info").get("outcome").get("result").asText();
+        String dateString = jsonNode.get("info").get("dates").get(0).asText();
+        Date matchDate = Date.valueOf(dateString);
+
+        int matchId = insertMatch(connection, matchNumber, matchType, result, matchDate, teamId1, teamId2);
+
+        List<Delivery> deliveries = matchReader.readDeliveries(jsonNode);
+
+        insertDeliveries(connection, matchId, deliveries, playerIdsByName, teamId1, team1Name, teamId2, team2Name);
+    }
+
+    public static void main(String[] args) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        MatchLoader matchLoader = new MatchLoader();
+        MatchReader matchReader = new MatchReader();
+
+        try (InputStream inputStream = MatchLoader.class.getClassLoader()
+                .getResourceAsStream("data/sample/Match.json");
+             Connection connection = DatabaseConnector.connect()) {
+
+            JsonNode jsonNode = objectMapper.readTree(inputStream);
+            matchLoader.loadMatch(connection, jsonNode, matchReader);
+
+            System.out.println("Match loaded successfully!");
+
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
         }
     }
 }

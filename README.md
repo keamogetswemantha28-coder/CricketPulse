@@ -36,7 +36,7 @@ CricketPulse is under active development. Progress so far:
 - [x] Design a normalized PostgreSQL schema (teams, players, matches, deliveries)
 - [x] Build a Java/JDBC ingestion pipeline (JSON → PostgreSQL)
 - [x] Write SQL analytics queries (top run scorers, wicket takers, economy rate)
-- [ ] Time-series analytics with DolphinDB
+- [x] Time-series analytics with DolphinDB
 - [ ] Streaming replay (simulating a live match from historical data)
 - [ ] REST API
 - [ ] Dashboard

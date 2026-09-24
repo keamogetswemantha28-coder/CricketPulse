@@ -181,20 +181,20 @@ public class MatchReader {
             matchReader.readPlayers(jsonNode);
             List<Delivery> deliveryList = matchReader.readDeliveries(jsonNode);
             int totalDeliveryRuns = matchReader.calculateTotalRuns(deliveryList);
-            System.out.println(totalDeliveryRuns);
-            HashMap<String, Integer> batterRuns = matchReader.calculateRunsByABatter(deliveryList);
-            System.out.println("Runs by batters" + "\n" +batterRuns);
-            HashMap<String, Integer> runsConceded = matchReader.calculateRunsByBowler(deliveryList);
-            System.out.println("Runs conceded by each bowler" + "\n" + runsConceded);
-            for (Delivery delivery : deliveryList) {
-                if (!delivery.getPlayerOut().isEmpty()) {
-                    System.out.println();
-                    System.out.println("Player out: " + delivery.getPlayerOut());
-                    System.out.println("Wicket type: " + delivery.getWicketKind());
-                }
-            }
-            HashMap<String, Integer> Wickets = matchReader.calculateWicketsByBowler(deliveryList);
-            System.out.println(Wickets);
+            System.out.println("Total Delivery runs: " + totalDeliveryRuns);
+//            HashMap<String, Integer> batterRuns = matchReader.calculateRunsByABatter(deliveryList);
+//            System.out.println("Runs by batters" + "\n" +batterRuns);
+//            HashMap<String, Integer> runsConceded = matchReader.calculateRunsByBowler(deliveryList);
+//            System.out.println("Runs conceded by each bowler" + "\n" + runsConceded);
+//            for (Delivery delivery : deliveryList) {
+//                if (!delivery.getPlayerOut().isEmpty()) {
+//                    System.out.println();
+//                    System.out.println("Player out: " + delivery.getPlayerOut());
+//                    System.out.println("Wicket type: " + delivery.getWicketKind());
+//                }
+//            }
+//            HashMap<String, Integer> Wickets = matchReader.calculateWicketsByBowler(deliveryList);
+//            System.out.println(Wickets);
 
         } catch (IOException e) {
             e.printStackTrace();

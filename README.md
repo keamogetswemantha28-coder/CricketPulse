@@ -1,155 +1,61 @@
-# CricketPulse 🏏
+## 🏏 Overview
 
-**An educational Data Engineering project focused on collecting, storing, processing, and analysing cricket match data.**
+CricketPulse is a data engineering project focused on collecting, storing, transferring, and analysing cricket match data. It explores how raw match data can be transformed into structured information and useful cricket statistics.
 
-CricketPulse explores how raw cricket match data can be transformed into structured, useful information. Using historical SA20 match data from [Cricsheet](https://cricsheet.org/), the project uses Java, JSON, PostgreSQL, and SQL to build a foundation for cricket statistics and time-series analytics.
+Using historical SA20 match data from [Cricsheet](https://cricsheet.org/), the project combines Java, PostgreSQL, SQL, and DolphinDB to explore data ingestion, relational storage, cross-database data transfer, and time-series analytics.
 
 ## 🎯 Project Goals
 
-- Collect cricket match data from JSON files.
-- Validate and process raw match data.
-- Store match information in a structured PostgreSQL database.
-- Query match data to explore player and team statistics.
-- Explore time-series analytics using DolphinDB.
+- Ingest cricket match data from JSON files.
+- Store structured match data in PostgreSQL.
+- Transfer data from PostgreSQL into DolphinDB.
+- Query and analyse cricket data using SQL and DolphinDB.
+- Develop a foundation for more advanced cricket analytics.
 
 ## 📊 Data Source
 
-CricketPulse uses historical SA20 cricket match data from Cricsheet.
+CricketPulse uses historical SA20 match data from Cricsheet.
 
-The data is provided in JSON format. Each match file contains information about teams, players, innings, overs, deliveries, and runs.
+The source data is provided in JSON format, with information about matches, teams, players, innings, overs, deliveries, and runs.
 
 ## ⚙️ Current Capabilities
 
-The project currently supports:
+- **Data ingestion:** Load a cricket match from a local JSON file using Java.
+- **Relational storage:** Store match information in PostgreSQL using a structured schema.
+- **SQL analytics:** Query stored cricket data to explore match and player statistics.
+- **Cross-database data transfer:** Transfer data from PostgreSQL into DolphinDB.
+- **Time-series analytics:** Use DolphinDB queries to explore cricket data.
 
-- Loading a single cricket match from a local JSON file.
-- Ingesting match data into PostgreSQL.
-- Storing data across a relational schema containing teams, players, matches, and deliveries.
-- Querying the stored data directly using SQL.
+## 🔄 Data Pipeline
 
-The ingestion workflow is:
+The current workflow connects the following stages:
 
-`Cricsheet JSON → Java ingestion pipeline → PostgreSQL → SQL queries`
+**Cricsheet JSON → Java ingestion → PostgreSQL → Data transfer process → DolphinDB → Analytics queries**
+
+This workflow demonstrates how data can move from raw source files through relational storage into a time-series analytics environment.
 
 ## 🛠️ Technology Stack
 
-- **Java** — application logic and data ingestion.
+- **Java** — data ingestion and application logic.
 - **JSON** — source data format.
-- **PostgreSQL** — relational data storage.
-- **JDBC** — Java-to-database connectivity.
-- **SQL** — querying and analysing stored data.
-- **DolphinDB** — time-series analytics exploration.
-- **Maven** — project build and dependency management.
+- **JDBC** — Java database connectivity.
+- **PostgreSQL** — relational storage.
+- **SQL** — querying and analysing structured data.
+- **DolphinDB** — time-series data storage and analytics.
+- **Maven** — build and dependency management.
 
-## 🚧 Development Roadmap
+## 🚧 Future Development
 
-CricketPulse is under active development. Planned areas of work include:
-
-- Expanding data ingestion beyond a single match.
-- Strengthening data validation.
-- Developing and expanding cricket analytics.
-- Exploring time-series analytics with DolphinDB.
-- Simulating live-match data using historical deliveries.
-- Building a REST API and dashboard.
-- Exploring Docker for containerisation.
-
-Features will be marked as complete as they are implemented and tested.
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Java 21 or later
-- Maven
-- PostgreSQL
-
-### 1. Create the database
-
-Open `psql` as your PostgreSQL user and create the database:
-
-```sql
-CREATE DATABASE cricketpulse;
-```
-
-### 2. Load the database schema
-
-From the project root, run the schema script using `psql`:
-
-```powershell
-psql -U postgres -d cricketpulse -f database/schema/schema.sql
-```
-
-This creates the `teams`, `players`, `matches`, and `deliveries` tables, including their relationships and constraints.
-
-### 3. Configure database credentials
-
-Set the environment variables in PowerShell, replacing the example password with your local PostgreSQL password:
-
-```powershell
-$env:CRICKETPULSE_DB_USER = "postgres"
-$env:CRICKETPULSE_DB_PASSWORD = "your_local_password"
-```
-
-Alternatively, configure these variables in your IDE's run configuration.
-
-### 4. Build the project
-
-```powershell
-mvn compile
-```
-
-### 5. Run the ingestion pipeline
-
-Run `MatchLoader` using the project's configured Maven execution setup:
-
-```powershell
-mvn exec:java "-Dexec.mainClass=za.co.keamogetswe.cricketpulse.MatchLoader"
-```
-
-The application reads a sample match JSON file and loads its data into PostgreSQL.
-
-A successful run should display:
-
-```text
-Match loaded successfully!
-```
-
-### 6. Verify the loaded data
-
-Connect to the `cricketpulse` database and run:
-
-```sql
-SELECT COUNT(*) FROM deliveries;
-```
-
-This checks how many delivery records are stored in the database.
-
-### 7. Explore the analytics queries
-
-Sample analytics queries are available in:
-
-`database/queries/analytics.sql`
-
-Run these queries against the database to explore the available cricket statistics.
+- Expand ingestion to support multiple matches.
+- Strengthen data validation and error handling.
+- Expand cricket statistics and analytical queries.
+- Explore replaying historical deliveries as a simulated live match.
+- Develop a REST API and dashboard.
+- Explore Docker containerisation.
 
 ## 🌱 Learning Focus
 
-CricketPulse is also a practical learning project. It helps me develop my understanding of:
+CricketPulse is a practical learning project through which I am developing my understanding of data engineering concepts, including ingestion, relational data modelling, cross-database data movement, and analytics.
 
-- Data ingestion and pipeline design.
-- Relational database modelling.
-- Data validation and processing.
-- SQL-based analytics.
-- Time-series data.
-
-My current focus is strengthening the data engineering foundation before expanding the project with additional features.
-
----
-
-*This project is a work in progress. Its documentation and capabilities will evolve as development continues.*
-
-### 7. Run analytics queries
-Sample queries (top run scorers, wicket takers, economy rate) are in
-`database/queries/analytics.sql` — run them against `cricketpulse` in `psql` or any
-SQL client.
+The project is being developed incrementally, with a focus on understanding how data moves between systems and how it can be transformed into useful information.
 

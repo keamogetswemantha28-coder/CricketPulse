@@ -1,109 +1,152 @@
-## Overview
+# CricketPulse 🏏
 
-CricketPulse is a data engineering platform that collects cricket match data, stores, 
-processes, and validates it, and provides useful cricket statistics through an API 
-or dashboard.
+**An educational Data Engineering project focused on collecting, storing, processing, and analysing cricket match data.**
 
-## Track
-WTC-XVETXBD4
+CricketPulse explores how raw cricket match data can be transformed into structured, useful information. Using historical SA20 match data from [Cricsheet](https://cricsheet.org/), the project uses Java, JSON, PostgreSQL, and SQL to build a foundation for cricket statistics and time-series analytics.
 
-## Goal
-- Collect cricket match data.
-- Process and validate the data.
-- Store the data in a structured way.
-- Generate useful cricket statistics.
+## 🎯 Project Goals
 
-## Purpose
-The purpose of CricketPulse is to collect and process cricket match data so that it 
-can be used to generate useful statistics and insights about matches and players.
+- Collect cricket match data from JSON files.
+- Validate and process raw match data.
+- Store match information in a structured PostgreSQL database.
+- Query match data to explore player and team statistics.
+- Explore time-series analytics using DolphinDB.
 
-## Data used
+## 📊 Data Source
 
-### Data Source
-- CricketPulse uses Cricket match data  that comes from CricSheet.
-- The data consist of SA20 matches.
+CricketPulse uses historical SA20 cricket match data from Cricsheet.
 
-### Data Format
-The match data is provided in JSON format. Each JSON file represents
-a single cricket match and contains information about the match,
-teams, players, innings, overs, deliveries, and runs.
+The data is provided in JSON format. Each match file contains information about teams, players, innings, overs, deliveries, and runs.
 
-## Current Status
+## ⚙️ Current Capabilities
 
-CricketPulse is under active development. Progress so far:
+The project currently supports:
 
-- [x] Understand the data structure (Cricsheet JSON format)
-- [x] Design a normalized PostgreSQL schema (teams, players, matches, deliveries)
-- [x] Build a Java/JDBC ingestion pipeline (JSON → PostgreSQL)
-- [x] Write SQL analytics queries (top run scorers, wicket takers, economy rate)
-- [x] Time-series analytics with DolphinDB
-- [ ] Streaming replay (simulating a live match from historical data)
-- [ ] REST API
-- [ ] Dashboard
-- [ ] Docker containerization
+- Loading a single cricket match from a local JSON file.
+- Ingesting match data into PostgreSQL.
+- Storing data across a relational schema containing teams, players, matches, and deliveries.
+- Querying the stored data directly using SQL.
 
-The project currently supports ingesting a single match at a time from a local JSON
-file into PostgreSQL, and querying the resulting data directly via SQL. The API and
-dashboard are planned but not yet prioritized — current focus is on the data
-engineering and time-series analytics core.
+The ingestion workflow is:
 
-## Setup
+`Cricsheet JSON → Java ingestion pipeline → PostgreSQL → SQL queries`
+
+## 🛠️ Technology Stack
+
+- **Java** — application logic and data ingestion.
+- **JSON** — source data format.
+- **PostgreSQL** — relational data storage.
+- **JDBC** — Java-to-database connectivity.
+- **SQL** — querying and analysing stored data.
+- **DolphinDB** — time-series analytics exploration.
+- **Maven** — project build and dependency management.
+
+## 🚧 Development Roadmap
+
+CricketPulse is under active development. Planned areas of work include:
+
+- Expanding data ingestion beyond a single match.
+- Strengthening data validation.
+- Developing and expanding cricket analytics.
+- Exploring time-series analytics with DolphinDB.
+- Simulating live-match data using historical deliveries.
+- Building a REST API and dashboard.
+- Exploring Docker for containerisation.
+
+Features will be marked as complete as they are implemented and tested.
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- [Java 21+ (JDK)](https://adoptium.net/)
-- [Maven](https://maven.apache.org/)
-- [PostgreSQL](https://www.postgresql.org/download/) (tested on version 18)
 
-### 1. Install PostgreSQL
-Download and install PostgreSQL for your OS. During setup, you'll be asked to set a
-password for the `postgres` superuser — remember it, you'll need it below.
+- Java 21 or later
+- Maven
+- PostgreSQL
 
-### 2. Start the PostgreSQL server
-If it's not already running as a background service, start it manually
-(adjust the path/version to match your install):
-```powershell
-& "C:\Program Files\PostgreSQL\<version>\bin\pg_ctl.exe" start -D "C:\Program Files\PostgreSQL\<version>\data"
-```
+### 1. Create the database
 
-### 3. Create the database
-Connect with `psql` and create the database:
-```powershell
-& "C:\Program Files\PostgreSQL\<version>\bin\psql.exe" -U postgres
-```
+Open `psql` as your PostgreSQL user and create the database:
+
 ```sql
 CREATE DATABASE cricketpulse;
 ```
 
-### 4. Load the schema
-Exit `psql` (`\q`), then run the provided schema file against your new database:
-```powershell
-& "C:\Program Files\PostgreSQL\<version>\bin\psql.exe" -U postgres -d cricketpulse -f database\schema\schema.sql
-```
-This creates all four tables (`teams`, `players`, `matches`, `deliveries`) with their
-constraints and relationships.
+### 2. Load the database schema
 
-### 5. Set environment variables
-The app reads database credentials from environment variables — they are never
-hardcoded in the source. Set these before running the project:
+From the project root, run the schema script using `psql`:
+
+```powershell
+psql -U postgres -d cricketpulse -f database/schema/schema.sql
+```
+
+This creates the `teams`, `players`, `matches`, and `deliveries` tables, including their relationships and constraints.
+
+### 3. Configure database credentials
+
+Set the environment variables in PowerShell, replacing the example password with your local PostgreSQL password:
+
 ```powershell
 $env:CRICKETPULSE_DB_USER = "postgres"
-$env:CRICKETPULSE_DB_PASSWORD = "<the password you set in step 1>"
+$env:CRICKETPULSE_DB_PASSWORD = "your_local_password"
 ```
-(If running from an IDE like IntelliJ, set these in your Run Configuration's
-Environment Variables field instead.)
 
-### 6. Run the ingestion pipeline
-Build and run `MatchLoader`, which reads a sample match JSON file and loads it into
-PostgreSQL:
+Alternatively, configure these variables in your IDE's run configuration.
+
+### 4. Build the project
+
 ```powershell
 mvn compile
-mvn exec:java -Dexec.mainClass="za.co.keamogetswe.cricketpulse.MatchLoader"
 ```
-On success, you should see `Match loaded successfully!`. You can then verify the
-data directly in `psql`:
+
+### 5. Run the ingestion pipeline
+
+Run `MatchLoader` using the project's configured Maven execution setup:
+
+```powershell
+mvn exec:java "-Dexec.mainClass=za.co.keamogetswe.cricketpulse.MatchLoader"
+```
+
+The application reads a sample match JSON file and loads its data into PostgreSQL.
+
+A successful run should display:
+
+```text
+Match loaded successfully!
+```
+
+### 6. Verify the loaded data
+
+Connect to the `cricketpulse` database and run:
+
 ```sql
 SELECT COUNT(*) FROM deliveries;
 ```
+
+This checks how many delivery records are stored in the database.
+
+### 7. Explore the analytics queries
+
+Sample analytics queries are available in:
+
+`database/queries/analytics.sql`
+
+Run these queries against the database to explore the available cricket statistics.
+
+## 🌱 Learning Focus
+
+CricketPulse is also a practical learning project. It helps me develop my understanding of:
+
+- Data ingestion and pipeline design.
+- Relational database modelling.
+- Data validation and processing.
+- SQL-based analytics.
+- Time-series data.
+
+My current focus is strengthening the data engineering foundation before expanding the project with additional features.
+
+---
+
+*This project is a work in progress. Its documentation and capabilities will evolve as development continues.*
 
 ### 7. Run analytics queries
 Sample queries (top run scorers, wicket takers, economy rate) are in
